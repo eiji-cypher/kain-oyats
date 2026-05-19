@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karinderya Tycoon - Lutong Bahay Sim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#x1F371;</text></svg>">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/hud.css">
+  <link rel="stylesheet" href="css/modals.css">
+  <link rel="stylesheet" href="css/tutorial.css">
+</head>
+<body>
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen" class="hidden">
+    <div class="loading-content">
+      <div id="loading-cafe-name" class="loading-cafe-name">MY CAFE</div>
+      <div class="loading-spinner-wrap">
+        <div class="loading-spinner"></div>
+      </div>
+      <div class="preload-container">
+        <div id="preload-bar" class="preload-bar"></div>
+        <div id="preload-text" class="preload-text">INITIALIZING SYSTEMS... 0%</div>
+      </div>
+      <div id="loading-status" class="loading-text status-closed">CLOSED</div>
+    </div>
+  </div>
+
+  <!-- MAIN MENU -->
+  <div id="main-menu">
+    <div class="menu-bg">
+      <div class="scanlines"></div>
+      <div class="grid-floor"></div>
+    </div>
+    <div class="menu-content">
+      <div class="logo-wrap">
+        <div class="logo-pre">WELCOME TO</div>
+        <h1 class="logo">Kanto<span>Kain</span></h1>
+        <div class="logo-sub">Authentic Filipino Lutong Bahay</div>
+      </div>
+      <div class="menu-btns">
+        <button class="menu-btn primary" onclick="console.log('New Game Clicked'); if(window.SaveSystem) SaveSystem.showSlotPicker('new'); else console.error('SaveSystem not loaded!')">&#9654; NEW GAME</button>
+        <button class="menu-btn" onclick="console.log('Load Game Clicked'); if(window.SaveSystem) SaveSystem.showSlotPicker('load'); else console.error('SaveSystem not loaded!')">&#11014; LOAD GAME</button>
+        <button class="menu-btn" onclick="console.log('Settings Clicked'); showSettings()">&#9881; SETTINGS</button>
+        <button class="menu-btn danger" onclick="console.log('Credits Clicked'); showCredits()">&#9432; CREDITS</button>
+      </div>
+      <div class="menu-version">v1.0.0 &mdash; Built with Three.js</div>
+    </div>
+  </div>
+
+  <!-- SAVE SLOT PICKER -->
+  <div id="save-slot-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h2 id="save-slot-title">Select Save Slot</h2>
+      <div id="save-slots" class="save-slots"></div>
+      <button class="modal-close-btn" onclick="SaveSystem.closeSlotPicker()">&#10005; Cancel</button>
+    </div>
+  </div>
+
+  <!-- GENERIC PROMPT MODAL -->
+  <div id="prompt-modal" class="modal-overlay hidden">
+    <div class="modal-box prompt-box">
+      <h2 id="prompt-title">SYSTEM PROMPT</h2>
+      <div id="prompt-message" style="padding: 20px; text-align: center; color: var(--text-dim); font-size: 14px;"></div>
+      <div id="prompt-input-wrap" class="hidden" style="padding: 0 20px 20px;">
+        <input type="text" id="prompt-input" placeholder="Enter name..." maxlength="20">
+      </div>
+      <div class="prompt-footer">
+        <button id="prompt-cancel" class="modal-close-btn">CANCEL</button>
+        <button id="prompt-confirm" class="menu-btn primary" style="padding: 8px 20px; font-size: 11px;">CONFIRM</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME CANVAS -->
+  <canvas id="game-canvas" class="hidden"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <!-- Top bar -->
+    <div id="hud-top">
+      <div class="hud-stat" id="stat-cash">
+        <span class="stat-icon">&#x1F4B0;</span>
+        <span class="stat-val" id="val-cash">&#x20B1;500</span>
+        <span class="stat-lbl">BALANCE</span>
+      </div>
+      <div class="hud-stat" id="stat-rep">
+        <span class="stat-icon">&#x2B50;</span>
+        <span class="stat-val" id="val-rep">0%</span>
+        <span class="stat-lbl">REPUTATION</span>
+      </div>
+      <div class="hud-stat" id="stat-cust">
+        <span class="stat-icon">&#x1F465;</span>
+        <span class="stat-val" id="val-cust">0</span>
+        <span class="stat-lbl">CUSTOMERS</span>
+      </div>
+      <div class="hud-stat" id="stat-level">
+        <span class="stat-icon">&#x1F3AE;</span>
+        <span class="stat-val" id="val-level">Lv.1</span>
+        <div class="xp-bar-wrap"><div id="xp-bar" class="xp-bar"></div></div>
+      </div>
+      <div class="hud-stat" id="stat-time">
+        <span class="stat-icon">&#x1F550;</span>
+        <span class="stat-val" id="val-time">Day 1</span>
+        <span class="stat-lbl" id="val-hour">08:00</span>
+      </div>
+      <div class="hud-stat" id="stat-speed">
+        <span class="stat-icon">&#x1F3C3;</span>
+        <span class="stat-val" id="val-speed-indicator">1x</span>
+        <span class="stat-lbl">GAME SPEED</span>
+      </div>
+      <div class="hud-stat" id="stat-trend" style="min-width: 130px; border-color: var(--neon3); cursor: help;" title="Current Market Trend">
+        <span class="stat-icon" id="trend-icon">&#x1F4C8;</span>
+        <span class="stat-val" id="val-trend" style="color: var(--neon3); font-size: 11px;">STABLE</span>
+        <span class="stat-lbl">MARKET TREND</span>
+      </div>
+      <div class="hud-btns">
+        <button class="hud-btn" id="btn-speed" onclick="GameState.cycleSpeed()">1x</button>
+        <button class="hud-btn" id="btn-sound-toggle" onclick="SoundManager.toggle()" title="Toggle Sound">&#x1F50A;</button>
+        <button class="hud-btn" onclick="SaveSystem.saveGame()">&#x1F4BE;</button>
+        <button class="hud-btn" onclick="togglePause()">&#x23F8;</button>
+        <button class="hud-btn" onclick="showMainMenu()">&#x1F3E0;</button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Container -->
+    <div id="hud-main-container">
+      <!-- Scrollable Left sidebar -->
+      <div id="sidebar">
+        <button class="sb-btn" id="btn-add-pc" onclick="SceneManager.buyTable()" title="Buy Table (&#x20B1;150)">
+          &#x1FA91;<span>Table<br><small>&#x20B1;150</small></span>
+        </button>
+        <button class="sb-btn" id="btn-sell" onclick="setTool('sell')" title="Sell Table (50% Refund)">
+          &#x1F4B0;<span>Sell<br><small>Refund</small></span>
+        </button>
+        <button class="sb-btn hidden" id="btn-pancit" onclick="openModal('pancitMinigame')" data-modal-id="pancitMinigame" title="Manual Wok Mixing">
+          &#x1F35C;<span>Manual<br><small>Wok</small></span>
+        </button>
+        <button class="sb-btn danger hidden" id="btn-cancel-tool" onclick="setTool(null)">
+          &#x2715;<span>Cancel<br><small>Tool</small></span>
+        </button>
+        <button class="sb-btn" id="btn-food-menu" onclick="openModal('foodMenu')" data-modal-id="foodMenu">
+          &#x1F4CB;<span>Menu<br><small>Dishes</small></span>
+        </button>
+        <button class="sb-btn" id="btn-rooms" onclick="openModal('rooms')" data-modal-id="rooms">
+          &#x1F3D7;&#xFE0F;<span>Expand<br><small>Rooms</small></span>
+        </button>
+        <button class="sb-btn" id="btn-upgrades" onclick="openModal('upgrades')" data-modal-id="upgrades">
+          &#x2B06;&#xFE0F;<span>Upgrades</span>
+        </button>
+        <button class="sb-btn" id="btn-staff" onclick="openModal('staff')" data-modal-id="staff">
+          &#x1F454;<span>Staff</span>
+        </button>
+        <button class="sb-btn" id="btn-rivals" onclick="openModal('rivals')" data-modal-id="rivals">
+          &#x2694;&#xFE0F;<span>Rivals</span>
+        </button>
+        <button class="sb-btn" id="btn-skills" onclick="openModal('skills')" data-modal-id="skills">
+          &#x1F333;<span>Skills</span>
+        </button>
+        <button class="sb-btn" id="btn-achievements" onclick="openModal('achievements')" data-modal-id="achievements">
+          &#x1F396;&#xFE0F;<span>Awards</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom bar (rep only) -->
+    <div id="hud-bottom">
+      <div id="rep-bar-wrap">
+        <span>REPUTATION</span>
+        <div class="rep-bar-track"><div id="rep-bar" class="rep-bar"></div></div>
+        <span id="rep-label">0 / 100</span>
+      </div>
+      <div id="zoom-hint" style="font-size:11px;color:rgba(255,220,150,0.6);font-family:var(--font-mono);letter-spacing:1px">
+        &#x1F5B1;&#xFE0F; Scroll to zoom
+      </div>
+    </div>
+
+    <!-- Floating income popups container -->
+    <div id="float-container"></div>
+
+    <!-- Event log -->
+    <div id="event-log"></div>
+  </div>
+
+  <!-- COMBO DISPLAY -->
+  <div id="combo-display" style="display:none; position:fixed; top:64px; left:50%; transform:translateX(-50%); z-index:200; align-items:center; gap:8px; background:rgba(20,12,8,0.92); border:1px solid var(--neon2); border-radius:20px; padding:6px 18px; font-family:var(--font-head); font-size:16px; font-weight:700; color:var(--neon2); box-shadow:0 0 18px rgba(255,122,143,0.3); pointer-events:none;">
+    <span id="combo-count">&#x1F525; x0 COMBO</span>
+  </div>
+
+  <!-- SATISFACTION METER -->
+  <div id="satisfaction-wrap" style="position:fixed; bottom:52px; left:90px; z-index:60; display:flex; align-items:center; gap:8px; padding:0 14px;">
+    <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-dim); letter-spacing:1px;">&#x1F60A; SATISFACTION</span>
+    <div style="width:120px; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
+      <div id="satisfaction-bar" style="height:100%; width:50%; background:linear-gradient(90deg,var(--neon2),var(--gold)); border-radius:3px; transition:width 0.5s ease;"></div>
+    </div>
+    <span id="satisfaction-val" style="font-family:var(--font-mono); font-size:11px; color:var(--gold);">50%</span>
+  </div>
+
+  <!-- LUNCH RUSH BANNER -->
+  <div id="lunch-rush-banner" style="display:none; position:fixed; top:64px; right:16px; z-index:200; background:linear-gradient(135deg,rgba(255,106,61,0.95),rgba(255,177,92,0.95)); border-radius:12px; padding:8px 16px; font-family:var(--font-head); font-size:14px; font-weight:700; color:#fff; box-shadow:0 0 20px rgba(255,106,61,0.5); pointer-events:none; animation:lunchRushPulse 1s ease-in-out infinite alternate;">
+    &#x1F35A; LUNCH RUSH! +60% Customers
+  </div>
+
+  <!-- CROSSHAIR -->
+  <div id="crosshair" class="hidden"></div>
+
+  <!-- MODALS -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <button id="modal-back-btn" class="modal-back-btn hidden" onclick="UIManager.goBack()">&#x2B05; Back</button>
+        <h2 id="modal-title">Modal</h2>
+        <button class="modal-close-btn" onclick="closeModal()">&#x2715;</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- TUTORIAL -->
+  <div id="tut-dim" class="tut-dim"></div>
+  <div id="tut-spotlight" class="tut-spotlight"></div>
+  <div id="tut-bubble" class="tut-bubble hidden">
+    <div class="tut-mascot" id="tut-mascot">&#x1F9D1;&#x200D;&#x1F373;</div>
+    <div class="tut-text" id="tut-text"></div>
+    <div id="tut-waiting" class="tut-waiting hidden">Waiting for you to act...</div>
+    <div class="tut-footer">
+      <span class="tut-step" id="tut-step"></span>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="tut-skip" id="tut-skip" onclick="Tutorial.skip()">Skip</button>
+        <button class="tut-next" id="tut-next" onclick="Tutorial.next()">Next &#x2192;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIRUS MINIGAME -->
+  <div id="virus-modal" class="modal-overlay hidden">
+    <div class="modal-box virus-box">
+      <h2>&#x26A0;&#xFE0F; KITCHEN DISASTER &mdash; TABLE <span id="virus-pc-id"></span></h2>
+      <div id="virus-game-area"></div>
+    </div>
+  </div>
+
+  <!-- MILESTONE POPUP -->
+  <div id="milestone-pop" class="hidden" style="position:fixed; inset:0; z-index:1800; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+    <div id="milestone-inner" style="background:linear-gradient(135deg,rgba(24,18,18,0.97),rgba(35,25,22,0.97)); border:2px solid var(--gold); border-radius:20px; padding:32px 40px; text-align:center; box-shadow:0 0 60px rgba(255,211,122,0.4); animation:milestoneIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);">
+      <div id="milestone-icon" style="font-size:56px; margin-bottom:12px;"></div>
+      <div id="milestone-title" style="font-family:var(--font-head); font-size:24px; font-weight:900; color:var(--gold); letter-spacing:3px; margin-bottom:6px;"></div>
+      <div id="milestone-desc" style="font-family:var(--font-body); font-size:16px; color:var(--text-dim);"></div>
+    </div>
+  </div>
+
+  <!-- DAILY REWARD POPUP -->
+  <div id="daily-reward-pop" class="hidden" style="position:fixed; inset:0; z-index:1900; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px);">
+    <div style="background:linear-gradient(135deg,rgba(24,18,18,0.98),rgba(35,25,22,0.98)); border:2px solid var(--gold); border-radius:24px; padding:36px 44px; text-align:center; max-width:380px; width:90vw; box-shadow:0 0 80px rgba(255,211,122,0.35); animation:milestoneIn 0.4s ease;">
+      <div style="font-size:52px; margin-bottom:12px;">&#x1F381;</div>
+      <div style="font-family:var(--font-head); font-size:20px; color:var(--gold); letter-spacing:3px; margin-bottom:8px;">DAILY REWARD</div>
+      <div id="daily-streak-display" style="font-family:var(--font-mono); font-size:14px; color:var(--text-dim); margin-bottom:16px;"></div>
+      <div id="daily-reward-amount" style="font-family:var(--font-head); font-size:40px; font-weight:900; color:var(--success); margin-bottom:20px;"></div>
+      <div id="daily-streak-bar" style="display:flex; gap:6px; justify-content:center; margin-bottom:24px;"></div>
+      <button class="menu-btn primary" style="width:100%; padding:14px; font-size:16px;" onclick="document.getElementById('daily-reward-pop').classList.add('hidden')">&#x2728; Claim Reward!</button>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="toast-container"></div>
+
+  <!-- ACHIEVEMENT POP -->
+  <div id="achievement-pop" class="hidden">
+    <div class="ach-icon" id="ach-icon"></div>
+    <div class="ach-info">
+      <div class="ach-label">ACHIEVEMENT UNLOCKED</div>
+      <div class="ach-name" id="ach-name"></div>
+    </div>
+  </div>
+
+  <!-- Scripts (order matters) -->
+  <script src="https://unpkg.com/three@0.147.0/build/three.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+  <!-- Post-processing and Bloom Shaders -->
+  <script src="https://unpkg.com/three@0.147.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://unpkg.com/three@0.147.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://unpkg.com/three@0.147.0/examples/js/postprocessing/ShaderPass.js"></script>
+  <script src="https://unpkg.com/three@0.147.0/examples/js/shaders/CopyShader.js"></script>
+  <script src="https://unpkg.com/three@0.147.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+  <script src="https://unpkg.com/three@0.147.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="js/sounds.js" onerror="console.error('CRITICAL: js/sounds.js failed to load (404)')"></script>
+  <script src="js/state.js" onerror="console.error('CRITICAL: js/state.js failed to load (404)')"></script>
+  <script src="js/scene.js" onerror="console.error('CRITICAL: js/scene.js failed to load (404)')"></script>
+  <script src="js/camera.js" onerror="console.error('CRITICAL: js/camera.js failed to load (404)')"></script>
+  <script src="js/customers.js" onerror="console.error('CRITICAL: js/customers.js failed to load (404)')"></script>
+  <script src="js/staff.js" onerror="console.error('CRITICAL: js/staff.js failed to load (404)')"></script>
+  <script src="js/rivals.js" onerror="console.error('CRITICAL: js/rivals.js failed to load (404)')"></script>
+  <script src="js/virus.js" onerror="console.error('CRITICAL: js/virus.js failed to load (404)')"></script>
+  <script src="js/tutorial.js" onerror="console.error('CRITICAL: js/tutorial.js failed to load (404)')"></script>
+  <script src="js/ui.js" onerror="console.error('CRITICAL: js/ui.js failed to load (404)')"></script>
+  <script src="js/save.js" onerror="console.error('CRITICAL: js/save.js failed to load (404). Check if file is named Save.js or save.js!')"></script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+/* ===== TUTORIAL CSS — Big Readable, Warm Filipino Style ===== */
+
+/* Dim overlay */
+.tut-dim {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 400;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.tut-dim.active { opacity: 1; }
+
+/* Spotlight cutout */
+.tut-spotlight {
+  position: fixed;
+  z-index: 401;
+  pointer-events: none;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 9999px rgba(0, 0, 0, 0.65),
+    0 0 0 3px #ffd37a,
+    0 0 0 7px rgba(255, 211, 122, 0.3),
+    0 0 50px rgba(255, 211, 122, 0.55);
+  transition: all 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+.tut-spotlight.active { opacity: 1; }
+
+/* Tutorial bubble — big, warm, readable */
+.tut-bubble {
+  position: fixed;
+  z-index: 500;
+  background: linear-gradient(160deg, #2e1f12 0%, #1c1108 100%);
+  border: 2.5px solid #ffd37a;
+  box-shadow:
+    0 0 0 1px rgba(255, 211, 122, 0.12),
+    0 10px 50px rgba(0, 0, 0, 0.75),
+    0 0 40px rgba(255, 211, 122, 0.22);
+  border-radius: 22px;
+  padding: 24px 28px 20px;
+  width: 400px;
+  max-width: calc(100vw - 180px); /* never overlap left sidebar or right panel */
+  max-height: calc(100vh - 120px); /* never overflow top/bottom HUD */
+  overflow-y: auto;
+  animation: bubbleIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bubbleIn {
+  from { opacity: 0; transform: scale(0.78) translateY(20px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Mascot */
+.tut-mascot {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 14px;
+  animation: mascotBounce 2.2s ease-in-out infinite;
+  filter: drop-shadow(0 4px 10px rgba(255, 211, 122, 0.45));
+  line-height: 1;
+}
+@keyframes mascotBounce {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%       { transform: translateY(-9px) rotate(3deg); }
+}
+
+/* Tutorial text — BIG and readable */
+.tut-text {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: #fff7ea;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  letter-spacing: 0.2px;
+}
+.tut-text b {
+  color: #ffd37a;
+  font-weight: 800;
+}
+
+/* Footer row */
+.tut-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Step counter */
+.tut-step {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 211, 122, 0.55);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* Next button — big, warm, satisfying */
+.tut-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #ffd37a, #ffb15c);
+  border: none;
+  color: #1a0a00;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 12px 26px;
+  border-radius: 14px;
+  letter-spacing: 1px;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 20px rgba(255, 177, 92, 0.5);
+  cursor: pointer;
+}
+.tut-next:hover {
+  background: linear-gradient(135deg, #ffe8a0, #ffd37a);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(255, 211, 122, 0.65);
+}
+.tut-next:active { transform: translateY(0); }
+
+/* Skip button */
+.tut-skip {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(255, 211, 122, 0.22);
+  color: rgba(255, 211, 122, 0.4);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 1px;
+}
+.tut-skip:hover {
+  border-color: rgba(255, 102, 122, 0.5);
+  color: rgba(255, 102, 122, 0.75);
+}
+
+/* Highlighted element — warm gold glow */
+.tut-highlight {
+  position: relative;
+  z-index: 402 !important;
+  pointer-events: all !important;
+  border-radius: 12px;
+  animation: tutGlow 1.1s ease-in-out infinite;
+}
+@keyframes tutGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px #ffd37a, 0 0 18px rgba(255, 211, 122, 0.65);
+    outline: 2px solid rgba(255, 211, 122, 0.85);
+  }
+  50% {
+    box-shadow: 0 0 0 5px #ffd37a, 0 0 45px rgba(255, 211, 122, 0.95), 0 0 80px rgba(255, 177, 92, 0.45);
+    outline: 3px solid #ffd37a;
+  }
+}
+
+/* Animated arrow — big, bouncy, warm */
+.tut-arrow {
+  position: fixed;
+  z-index: 450;
+  font-size: 38px;
+  pointer-events: none;
+  animation: arrowBounce 0.65s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(255, 211, 122, 0.95));
+  line-height: 1;
+}
+@keyframes arrowBounce {
+  0%, 100% { transform: scale(1)    translateX(0); }
+  50%       { transform: scale(1.3) translateX(-7px); }
+}
+
+/* Waiting indicator */
+.tut-waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 211, 122, 0.75);
+  letter-spacing: 1px;
+  animation: waitPulse 1.4s ease-in-out infinite;
+}
+.tut-waiting::before {
+  content: '⏳';
+  font-size: 16px;
+}
+@keyframes waitPulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 1; }
+}
+
+/* ===== BIG FONT GLOBAL OVERRIDES for all UI ===== */
+:root {
+  --tut-font-big: 'Rajdhani', sans-serif;
+}
+
+/* Sidebar buttons — bigger text */
+.sb-btn {
+  font-size: 13px !important;
+}
+.sb-btn span {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+.sb-btn small {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--gold) !important;
+}
+
+/* HUD stats — bigger */
+.stat-val {
+  font-size: 18px !important;
+}
+.stat-lbl {
+  font-size: 11px !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* Modal titles */
+#modal-title {
+  font-size: 20px !important;
+  letter-spacing: 2px !important;
+}
+
+/* Upgrade cards */
+.upgrade-name {
+  font-size: 17px !important;
+  font-weight: 700 !important;
+}
+.upgrade-desc {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+.upgrade-btn {
+  font-size: 14px !important;
+  padding: 10px 16px !important;
+}
+
+/* Staff cards */
+.staff-name {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+.staff-role,
+.staff-stats {
+  font-size: 13px !important;
+}
+.hire-btn {
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+}
+
+/* Rival cards */
+.rival-name {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+.rival-stat-val {
+  font-size: 18px !important;
+}
+.rival-stat-lbl {
+  font-size: 11px !important;
+}
+
+/* Achievement cards */
+.ach-card-name {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+.ach-card-desc {
+  font-size: 13px !important;
+}
+
+/* Skill nodes */
+.skill-node-name {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+.skill-node-desc {
+  font-size: 12px !important;
+}
+.skill-node-cost {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
+/* Toast notifications — bigger */
+.toast {
+  font-size: 15px !important;
+  padding: 12px 20px !important;
+}
+
+/* Menu buttons */
+.menu-btn {
+  font-size: 16px !important;
+  padding: 14px 24px !important;
+}
+
+/* Day end summary */
+#modal-body h2 {
+  font-size: 22px !important;
+}
+
+/* Satisfaction meter label */
+#satisfaction-wrap span {
+  font-size: 11px !important;
+}
+
+/* Combo display */
+#combo-count {
+  font-size: 16px !important;
+}
+
+/* Event log */
+.event-item {
+  font-size: 13px !important;
+}
+
+/* Achievement pop */
+.ach-label {
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+}
+.ach-name {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+/* Milestone popup */
+#milestone-title {
+  font-size: 24px !important;
+}
+#milestone-desc {
+  font-size: 16px !important;
+}
+
+/* Daily reward */
+#daily-reward-amount {
+  font-size: 40px !important;
+}
+
+/* ===== GREETING POPUP ANIMATION ===== */
+@keyframes greetPop {
+  from { opacity: 0; transform: scale(0.6) translateY(16px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+/* ===== RICH NOTIFICATION TOAST ===== */
+.toast {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  padding: 12px 20px !important;
+  border-radius: 14px !important;
+  letter-spacing: 0.3px !important;
+  animation: toastSlide 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes toastSlide {
+  from { opacity:0; transform:translateX(40px) scale(0.85); }
+  to   { opacity:1; transform:translateX(0)    scale(1); }
+}
+
+/* ===== COMBO DISPLAY ===== */
+#combo-display {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  letter-spacing: 2px !important;
+  animation: comboPulse 0.6s ease-in-out infinite alternate;
+}
+@keyframes comboPulse {
+  from { transform: translateX(-50%) scale(1); }
+  to   { transform: translateX(-50%) scale(1.07); }
+}
+
+/* ===== FLOAT POP MONEY EFFECT ===== */
+.float-pop {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* ===== CONFETTI & BUBBLE ANIMATIONS ===== */
+@keyframes confettiExplode {
+  0%   { opacity: 1; transform: translate(0,0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(0.4); }
+}
+
+@keyframes bubbleIn {
+  from { opacity: 0; transform: scale(0.75) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ===== SIDEBAR AFFORDABILITY ===== */
+.sb-btn.can-afford {
+  border-color: rgba(124, 255, 157, 0.55) !important;
+  color: var(--success) !important;
+}
+.sb-btn.cannot-afford {
+  opacity: 0.5;
+}
