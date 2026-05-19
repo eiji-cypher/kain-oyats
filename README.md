@@ -1,6 +1,6 @@
-# 🍜 CyberKanto: Filipino Futurism Tycoon
+# 🍜 Kain Oyats: Filipino Carinderia Tycoon
 
-**CyberKanto** is a high-fidelity 3D autonomous idle restaurant tycoon game built with Three.js. Set in a neon-drenched "Filipino Futurism" aesthetic, you evolve a tiny street-side food stall into a massive, automated money-printing culinary empire.
+**Kain Oyats** is a high-fidelity 3D autonomous idle restaurant tycoon game built with Three.js. Set in a vibrant "Filipino Carinderia" aesthetic, blending traditional charm with modern fusion, you evolve a tiny street-side food stall into a massive, automated money-printing culinary empire.
 
 > *Fantasy: Build a tiny food stall into a chaotic money-printing culinary empire.*
 

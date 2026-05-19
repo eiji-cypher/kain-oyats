@@ -215,7 +215,7 @@ function updateHUD() {
     const hudTop = document.getElementById('hud-top'); // Corrected variable name
     if (hudTop) hudTop.insertBefore(nameEl, hudTop.querySelector('.hud-btns'));
   }
-  nameEl.textContent = GameState.cafeName || 'KantoKain';
+  nameEl.textContent = GameState.cafeName || 'KainOyats';
   
   const date = GameState.currentDate;
   const weatherIcon = GameState.weather === 'rain' ? '🌧️' : '☀️';
@@ -818,7 +818,7 @@ function shareCertificate() {
     scale: 2,
   }).then(canvas => {
     const link = document.createElement('a'); // Corrected variable name
-    link.download = `KantoKain_Achievement_${GameState.cafeName}.png`;
+    link.download = `KainOyats_Achievement_${GameState.cafeName}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
     showToast("💾 Certificate saved to your downloads!", "success");
@@ -1286,9 +1286,9 @@ function renderCredits() {
   const body = document.getElementById('modal-body');
   body.innerHTML = `
     <div style="text-align:center; line-height:2"> 
-      <div style="font-family:var(--font-head); color:var(--gold); margin-bottom:10px">KANTOKAIN TEAM</div>
+      <div style="font-family:var(--font-head); color:var(--gold); margin-bottom:10px">KAINOYATS TEAM</div>
       <p>Lead Developer — Eiji, Rohan, Chiongki</p>
-      <p>Graphics Engine — Three.js</p>
+      <p>Graphics Engine — Three.js, WEBGL, HUHU</p>
       <p>UI/UX Design — EijiDev COMLAB DMC CCS</p>
       <div style="margin-top:20px; font-size:12px; color:var(--text-dim)">Salamat sa lahat ng sumuporta! 🍱</div>
     </div>
